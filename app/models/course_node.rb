@@ -53,6 +53,8 @@ class CourseNode < Node
     else
       values = Ta.get_mapped_courses(user_id)
     end
+    sortvar = 'created_at'
+    sortorder = 'desc'
     
     find(:all, :include => :course, :conditions => [conditions,values], :order => "courses.#{sortvar} #{sortorder}")       
   end  

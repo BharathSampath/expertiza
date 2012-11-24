@@ -1,13 +1,13 @@
 
 <BR/>
-Hello 
+
 <% if @root_node %>      
-   ahfoasdfpasdifasdfsdf   
+   
      <%= link_to "Return to top", :controller => 'tree_display', :action => 'drill' %>
      <%  
      curr_node = @root_node 
      %>
-     <%= 'hello'. curr_node.parent_id %>
+    
     <%
      while curr_node.parent_id 
        curr_node = Node.find(curr_node.parent_id) %>

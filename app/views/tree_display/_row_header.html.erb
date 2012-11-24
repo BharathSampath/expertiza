@@ -19,6 +19,7 @@
 	<%end%>	     
 <% end %>    
 <% width = 66 - depth * 2 %>
+
 <TD COLSPAN="<%= 3 - depth %>" WIDTH="<%= width %>%">     
   <% if parent_node.get_name == 'Courses'&& session[:user].role_id == 6 %>
   <%else%>

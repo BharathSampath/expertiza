@@ -68,12 +68,14 @@ class TreeDisplayController < ApplicationController
   def goto_assignments
     node_object = TreeFolder.find_by_name('Assignments')
     session[:root] = FolderNode.find_by_node_object_id(node_object.id).id
+    @sortvar = 'due_at'
     redirect_to :controller => 'tree_display', :action => 'list'
   end  
   
   # called when the display is requested
   # ajbudlon, July 3rd 2008
   def list  
+=begin 
     if session[:display]      
       @sortvar = session[:display][:sortvar]
       @sortorder = session[:display][:sortorder]
@@ -93,7 +95,7 @@ class TreeDisplayController < ApplicationController
       end
       session[:display] = params[:display]      
     end
-  
+=end
     if session[:display].nil? and params[:display].nil?
       @show = true
     end

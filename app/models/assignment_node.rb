@@ -5,12 +5,13 @@
 
 class AssignmentNode < Node   
   belongs_to :assignment, :class_name => "Assignment", :foreign_key => "node_object_id"
+  has_many :due_dates , :foreign_key => "assignment_id"
   # Returns the table in which to locate Assignments
   def self.table
     "assignments"
   end
   
-  # parameters:
+  # parametersi:
   #   sortvar: valid strings - name, created_at, updated_at, directory_path
   #   sortorder: valid strings - asc, desc
   #   user_id: instructor id for assignment
@@ -18,6 +19,7 @@ class AssignmentNode < Node
   
   # returns: list of AssignmentNodes based on query
   def self.get(sortvar = nil,sortorder =nil,user_id = nil,show = nil,parent_id = nil)    
+   
     if show   
       if User.find(user_id).role.name != "Teaching Assistant"
         conditions = 'assignments.instructor_id = ?'
@@ -32,6 +34,7 @@ class AssignmentNode < Node
       end   
     end
     
+       
     if User.find(user_id).role.name != "Teaching Assistant"
       values = user_id
     else
@@ -48,8 +51,18 @@ class AssignmentNode < Node
     if sortorder.nil?
       sortorder = 'ASC'
     end         
-        
-    find(:all, :include => :assignment, :conditions => [conditions,values], :order => "assignments.#{sortvar} #{sortorder}")    
+    sortvar = 'name'
+    sortorder = 'DESC'   
+    conditions += " and due_dates.deadline_type_id = 1"    
+#    ActiveRecord::Base.connection.execute("select * from assignments");
+#    Assignment.joins('JOIN due_dates ON due_dates.assignment_id = id',conditions => [conditions,values], :order => "assignments.#{sortvar} #{sortorder}")
+   # find(:all, :include => :assignment, :conditions => [conditions,values], :order => "assignments.#{sortvar} #{sortorder}")    
+#    find(:all, :include => [:assignment,:due_date], :joins => 'JOIN due_dates ON due_dates.assignment_id = assignments.id', conditions => [conditions,values], :order => "assignments.#{sortvar} #{sortorder}")
+     find(:all ,:include => :assignment, :joins =>  [:assignment => :due_dates],:conditions => [conditions,values],  :order => "due_at DESC")
+ 
+
+#    find(:all, :include => :assignment, conditions => [conditions,values], :order => "assignments.#{sortvar} #{sortorder}")
+    
   end
   
   # Indicates that this object is always a leaf
